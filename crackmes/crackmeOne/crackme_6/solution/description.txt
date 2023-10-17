@@ -21,3 +21,40 @@ char(ar1[i] + user_passwd[i]) == ar2.
 
 Если честно, не совсем понимаю, как 32-x разрядные инструкции выполняются вместе
 с 64-х разрядными. Буду в этом разбираться. 
+
+UPD:
+Все оказалось немного иначе. Благодаря статье
+https://scrammed.blogspot.com/2014/10/code-obfunscation-mixing-32-and-64-bit.html
+разобрался, как можно вызывать код для Protected Mode (32-разрядный) из Long Mode
+(64-разрядный). По сути, нужно созранить состояние сегментных регистро и сделать
+jmp far. 
+
+Собственно именно это и происходить в данной задаче:
+                mov     [rsp+8+var_4], 23h ; '#'
+                call    $+5             ; jmp to next instruction
+loc_401693:                             ; DATA XREF: sub_401670+24↓o
+                pop     rdx
+                add     edx, (offset modify_code_func - offset loc_401693)
+                mov     [rsp+8+var_8], edx
+                retf
+
+0. modify_code_func - функция, в которой живет код для Protected Mode
+1. Загрузить на стек значение сегмента 
+(the code segment selector (0x0023 is the standard usermode code segment))
+2. Получить адрес следующей инструкции. Это нужно для расчета адреса вызываемой
+из PM функции. 
+3. Рассчитать адрес этой функции
+4. Положить на стек значение адреса
+5. RETF-ом сделать jmp far
+6. Счастье! Следующий код будет выполняться процессором в PM
+
+
+Возврат из PM в LM реализован так:
+		push    33h ; '3'
+		call    $+5
+		pop     rdx
+		add     edx, 6
+		push    rdx
+		retf
+
+Комментарии излишни.
