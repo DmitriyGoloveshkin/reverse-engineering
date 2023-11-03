@@ -14,7 +14,8 @@
 сообщением "you do not have a license, you are a noob!:D". Вот так. Ни запроса
 на ввод, ни "до свидания". Как-то корявенько. Делать нечего, открываю IDA и 
 начинаю исследовать. Сходу ничего не понятно. Принятие. Разбираюсь. 
-Первая мысль - пользовательский ввод нужно передавать при запуске программы; пробую, ничего не изменилось. Второя мысль - должен быть файлик с паролем, 
+Первая мысль - пользовательский ввод нужно передавать при запуске программы;
+пробую, ничего не изменилось. Второя мысль - должен быть файлик с паролем, 
 который программа ищет и сверяет содержимое. Но ничего такого вроде и не видно.
 
 Строки я посмотрел, ничего не увидел, поулыбался и задумался. Ладно, тут я не 
@@ -36,14 +37,14 @@
 определялся адрес нужно библиотечной функции. Имена функций также искались через 
 вычисление контрольной суммы. Что было найдено:
 
-Библиотека		функция
-kernel32.dll	GetCurrentThread
-ntdll.dll 		NtSetInformationThread
-kernel32.dll 	isDebuggerPresent
-ucrtbase.dll 	ucrtbase_system
-kernel32.dll 	LoadLibrary
-user32.dll 		gapfnScSendMessage
-kernel32.dll 	GetSystemFirmwareTable
+Библиотека          функция
+kernel32.dll        GetCurrentThread
+ntdll.dll           NtSetInformationThread
+kernel32.dll        isDebuggerPresent
+ucrtbase.dll        ucrtbase_system
+kernel32.dll        LoadLibrary
+user32.dll          gapfnScSendMessage
+kernel32.dll        GetSystemFirmwareTable
 
 Все эти функции получали управление через регистровый вызов (call reg). Первым 
 делом я почувствовал мощь NtSetInformationThread. Ответ убил) Отладчик признаков
