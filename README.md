@@ -1,6 +1,8 @@
 # reverse-engineering
 Repository for reverse engineering projects
 
+For each task there is a file with a description - *description.txt*
+
 
 # Полезные материалы
 Сайт с crackme-шками для тренировок:
